@@ -1,0 +1,154 @@
+# course-service/swagger.yaml
+
+openapi: 3.0.0
+info:
+  title: Course Service API (EduConnect)
+  version: 1.0.0
+  description: API untuk mengelola data kursus pada platform EduConnect.
+
+servers:
+  - url: http://localhost:3002
+    description: Server Lokal Course Service
+
+paths:
+  /courses:
+    get:
+      summary: Mendapatkan daftar kursus
+      responses:
+        '200':
+          description: Daftar kursus berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+    post:
+      summary: Menambahkan kursus baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInput'
+      responses:
+        '201':
+          description: Kursus berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '400':
+          description: Data tidak lengkap
+  /courses/{id}:
+    get:
+      summary: Mendapatkan detail kursus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Kursus ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '404':
+          description: Kursus tidak ditemukan
+    put:
+      summary: Memperbarui kursus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInput'
+      responses:
+        '200':
+          description: Kursus berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '400':
+          description: Data tidak lengkap
+        '404':
+          description: Kursus tidak ditemukan
+    delete:
+      summary: Menghapus kursus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Kursus berhasil dihapus
+        '404':
+          description: Kursus tidak ditemukan
+  /courses/by-user/{userId}:
+    get:
+      summary: Mendapatkan kursus yang diambil oleh siswa tertentu
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Daftar kursus terdaftar berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EnrollmentSummary'
+        '404':
+          description: Data tidak ditemukan
+
+components:
+  schemas:
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        credits:
+          type: number
+        lecturer:
+          type: string
+    CourseInput:
+      type: object
+      required:
+        - title
+        - credits
+        - lecturer
+      properties:
+        title:
+          type: string
+        credits:
+          type: number
+        lecturer:
+          type: string
+    EnrollmentSummary:
+      type: object
+      properties:
+        title:
+          type: string
+        credits:
+          type: number
+        grade:
+          type: string

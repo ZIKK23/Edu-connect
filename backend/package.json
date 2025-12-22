@@ -1,0 +1,31 @@
+{
+  "name": "educonnect-backend",
+  "version": "2.0.0",
+  "description": "EduConnect GraphQL API Server with Apollo Server and PostgreSQL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "graphql",
+    "apollo",
+    "postgresql",
+    "education"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/server": "^4.10.0",
+    "@graphql-tools/schema": "^10.0.30",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "graphql": "^16.8.1",
+    "graphql-playground-middleware-express": "^1.7.23",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "educonnect-project",
+  "version": "2.0.0",
+  "description": "Modern Education Management Platform with GraphQL, PostgreSQL, React, and Docker",
+  "main": "index.js",
+  "scripts": {
+    "backend": "cd backend && npm start",
+    "frontend": "cd frontend && npm run dev",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:build": "docker-compose build"
+  },
+  "keywords": [
+    "graphql",
+    "apollo",
+    "postgresql",
+    "react",
+    "vite",
+    "docker",
+    "education",
+    "microservices"
+  ],
+  "author": "Asricky",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Asricky/EduConnect-Project.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Asricky/EduConnect-Project/issues"
+  },
+  "homepage": "https://github.com/Asricky/EduConnect-Project#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  }
+}

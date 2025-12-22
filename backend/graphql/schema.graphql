@@ -1,0 +1,109 @@
+# GraphQL Schema for EduConnect
+
+# Student Type
+type Student {
+  id: ID!
+  name: String!
+  email: String!
+  createdAt: String
+}
+
+# Course Type
+type Course {
+  id: ID!
+  title: String!
+  credits: Int!
+  lecturer: String!
+  createdAt: String
+}
+
+# Enrollment Type
+type Enrollment {
+  id: ID!
+  student: Student!
+  course: Course!
+  grade: String
+  createdAt: String
+}
+
+# Course with Grade (for student courses query)
+type CourseWithGrade {
+  title: String!
+  credits: Int!
+  grade: String
+}
+
+# Student with Courses (integration query result)
+type StudentCourses {
+  student: Student!
+  courses: [CourseWithGrade!]!
+}
+
+# Input Types for Mutations
+input CreateStudentInput {
+  name: String!
+  email: String!
+}
+
+input UpdateStudentInput {
+  name: String!
+  email: String!
+}
+
+input CreateCourseInput {
+  title: String!
+  credits: Int!
+  lecturer: String!
+}
+
+input UpdateCourseInput {
+  title: String!
+  credits: Int!
+  lecturer: String!
+}
+
+input CreateEnrollmentInput {
+  studentId: ID!
+  courseId: ID!
+  grade: String
+}
+
+input UpdateEnrollmentInput {
+  grade: String
+}
+
+# Queries
+type Query {
+  # Student Queries
+  students: [Student!]!
+  student(id: ID!): Student
+
+  # Course Queries
+  courses: [Course!]!
+  course(id: ID!): Course
+
+  # Enrollment Queries
+  enrollments: [Enrollment!]!
+  enrollment(id: ID!): Enrollment
+
+  # Integration Query
+  studentCourses(studentId: ID!): StudentCourses
+}
+
+# Mutations
+type Mutation {
+  # Student Mutations
+  createStudent(input: CreateStudentInput!): Student!
+  updateStudent(id: ID!, input: UpdateStudentInput!): Student!
+  deleteStudent(id: ID!): Boolean!
+
+  # Course Mutations
+  createCourse(input: CreateCourseInput!): Course!
+  updateCourse(id: ID!, input: UpdateCourseInput!): Course!
+  deleteCourse(id: ID!): Boolean!
+
+  # Enrollment Mutations
+  createEnrollment(input: CreateEnrollmentInput!): Enrollment!
+  updateEnrollment(id: ID!, input: UpdateEnrollmentInput!): Enrollment!
+  deleteEnrollment(id: ID!): Boolean!
+}

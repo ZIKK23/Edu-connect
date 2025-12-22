@@ -1,0 +1,124 @@
+# student-service/swagger.yaml
+
+openapi: 3.0.0
+info:
+  title: Student Service API (EduConnect)
+  version: 1.0.0
+  description: API untuk mengelola data siswa/user pada platform EduConnect.
+
+servers:
+  - url: http://localhost:3001
+    description: Server Lokal Student Service
+
+paths:
+  /users:
+    get:
+      summary: Mendapatkan daftar semua siswa
+      description: Mengambil semua data siswa dari database.
+      responses:
+        '200':
+          description: Daftar siswa berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+    post:
+      summary: Menambahkan siswa baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentInput'
+      responses:
+        '201':
+          description: Siswa berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          description: Data tidak lengkap
+  /users/{id}:
+    get:
+      summary: Mendapatkan siswa berdasarkan ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data siswa berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '404':
+          description: Siswa tidak ditemukan
+    put:
+      summary: Memperbarui data siswa
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentInput'
+      responses:
+        '200':
+          description: Data siswa berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          description: Data tidak lengkap
+        '404':
+          description: Siswa tidak ditemukan
+    delete:
+      summary: Menghapus siswa
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Siswa berhasil dihapus
+        '404':
+          description: Siswa tidak ditemukan
+
+components:
+  schemas:
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID unik siswa
+        name:
+          type: string
+          description: Nama lengkap siswa
+        email:
+          type: string
+          description: Alamat email siswa
+    StudentInput:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+        email:
+          type: string

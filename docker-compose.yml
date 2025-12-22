@@ -1,0 +1,95 @@
+services:
+  # PostgreSQL Database for Students & Enrollments
+  postgres-students:
+    image: postgres:15-alpine
+    container_name: educonnect-postgres-students
+    environment:
+      POSTGRES_DB: educonnect_students_db
+      POSTGRES_USER: educonnect
+      POSTGRES_PASSWORD: educonnect123
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/init-students.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-students-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U educonnect -d educonnect_students_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - educonnect-network
+
+  # PostgreSQL Database for Courses
+  postgres-courses:
+    image: postgres:15-alpine
+    container_name: educonnect-postgres-courses
+    environment:
+      POSTGRES_DB: educonnect_courses_db
+      POSTGRES_USER: educonnect
+      POSTGRES_PASSWORD: educonnect123
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./database/init-courses.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-courses-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U educonnect -d educonnect_courses_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - educonnect-network
+
+  # GraphQL Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: educonnect-backend
+    environment:
+      DB_HOST_STUDENTS: postgres-students
+      DB_PORT_STUDENTS: 5432
+      DB_HOST_COURSES: postgres-courses
+      DB_PORT_COURSES: 5432
+      DB_USER: educonnect
+      DB_PASSWORD: educonnect123
+      DB_NAME_STUDENTS: educonnect_students_db
+      DB_NAME_COURSES: educonnect_courses_db
+      GRAPHQL_PORT: 4000
+      FRONTEND_URL: http://localhost:5000
+      NODE_ENV: production
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres-students:
+        condition: service_healthy
+      postgres-courses:
+        condition: service_healthy
+    networks:
+      - educonnect-network
+    restart: unless-stopped
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: educonnect-frontend
+    ports:
+      - "5000:80"
+    depends_on:
+      - backend
+    networks:
+      - educonnect-network
+    restart: unless-stopped
+
+networks:
+  educonnect-network:
+    driver: bridge
+
+volumes:
+  postgres-students-data:
+    driver: local
+  postgres-courses-data:
+    driver: local
